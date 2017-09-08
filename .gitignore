@@ -1,0 +1,7 @@
+venv
+tensorboard
+MNIST_data
+models
+
+.vscode
+.ipynb_checkpoints
