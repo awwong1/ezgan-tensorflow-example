@@ -1,7 +1,10 @@
+""" Training the MNIST DCGAN without visualizing the data on MatPlotLib.
+Essentially the same code as the Jupyter Notebook
+"""
+
 import tensorflow as tf # machine learning
 import numpy as np # matrix math
 import datetime # logging the time for model checkpoints and training
-import matplotlib.pyplot as plt # visualize results
 
 # Collect dataset
 # MNIST - handwritten character digits ~50K training and validation images + labels, 10K testing
@@ -227,7 +230,7 @@ tf.summary.image('Generated_images', images_for_tensorboard, 10)
 merged = tf.summary.merge_all()
 logdir = "tensorboard/gan/"
 writer = tf.summary.FileWriter(logdir, sess.graph)
-print(logdir)
+print("Tensorboard Directory: ", logdir)
 
 saver = tf.train.Saver()
 
@@ -267,45 +270,13 @@ for i in range(50000):
         d_real_count += 1
 
     if i % 10 == 0:
+        print("TRAINING STEP", i, "AT", datetime.datetime.now())
         real_image_batch = mnist.validation.next_batch(batch_size)[0].reshape([batch_size, 28, 28, 1])
         summary = sess.run(merged, {x_placeholder: real_image_batch, d_real_count_ph: d_real_count,
                                     d_fake_count_ph: d_fake_count, g_count_ph: g_count})
         writer.add_summary(summary, i)
         d_real_count, d_fake_count, g_count = 0, 0, 0
 
-    if i % 1000 == 0:
-        # Periodically display a sample image in the notebook
-        # (These are also being sent to TensorBoard every 10 iterations)
-        with tf.variable_scope(tf.get_variable_scope(), reuse=True) as scope:
-            images = sess.run(generator(3, z_dimensions))
-            d_result = sess.run(discriminator(x_placeholder), {x_placeholder: images})
-        print("TRAINING STEP", i, "AT", datetime.datetime.now())
-        for j in range(3):
-            print("Discriminator classification", d_result[j])
-            im = images[j, :, :, 0]
-            plt.imshow(im.reshape([28, 28]), cmap='Greys')
-            plt.show()
-
     if i % 5000 == 0:
         save_path = saver.save(sess, "models/pretrained_gan.ckpt", global_step=i)
         print("saved to %s" % save_path)
-
-with tf.variable_scope(tf.get_variable_scope(), reuse=True) as scope:
-    test_images = sess.run(generator(10, 100))
-    test_eval = sess.run(discriminator(x_placeholder), {x_placeholder: test_images})
-
-    real_images = mnist.validation.next_batch(10)[0].reshape([10, 28, 28, 1])
-    real_eval = sess.run(discriminator(x_placeholder), {x_placeholder: real_images})
-
-# Show discriminator's probabilities for the generated images,
-# and display the images
-for i in range(10):
-    print(test_eval[i])
-    plt.imshow(test_images[i, :, :, 0], cmap='Greys')
-    plt.show()
-
-# Now do the same for real MNIST images
-for i in range(10):
-    print(real_eval[i])
-    plt.imshow(real_images[i, :, :, 0], cmap='Greys')
-    plt.show()

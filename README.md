@@ -3,7 +3,7 @@
 Quick running example for training your own Generative Adversarial Network to generate images using MNIST handwritten character dataset as training data.
 
 Inspired by [jonbruner/ezgan](https://github.com/jonbruner/ezgan) and [llSourcell/Generative_Adversarial_networks_LIVE](https://github.com/llSourcell/Generative_Adversarial_networks_LIVE).
-* Minor modifications were made to support Tensorflow 1.2 (primarily issues with scope variable exceptions)
+* Modifications were made to support Tensorflow 1.3 (primarily issues with scope variable exceptions)
 
 ## Quickstart
 
@@ -18,10 +18,10 @@ Inspired by [jonbruner/ezgan](https://github.com/jonbruner/ezgan) and [llSourcel
 * Activate the environment, install dependencies
   * `source venv/bin/activate`
   * `pip install -r requirements.txt`
-* Run the Jupyter Notebook
+* Run the Jupyter Notebook & follow steps outlined in the document
   * `./venv/bin/jupyter notebook`
 * Run the Tensorboard visualizations
-  * `./venv/bin/tensorboard --logdir=tensorboard`
+  * `./venv/bin/tensorboard --logdir=tensorboard/gan`
 
 ## License
 
